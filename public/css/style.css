@@ -1,0 +1,130 @@
+:root {
+  --bs-blue-10: #f2f7fe;
+  --bs-blue-20: #e3eeff;
+  --bs-blue-30: #64a2ff;
+  --bs-blue-50: #0b8aff;
+  --bs-blue-60: #005ff8;
+  --bs-blue-80: #07224c;
+  --bs-blue-90: #081b39;
+  --bs-black: #0a0a09;
+  --bs-gray-100: #141414;
+  --bs-gray-95: #1a1a1a;
+  --bs-gray-90: #262626;
+  --bs-gray-80: #383838;
+  --bs-gray-70: #707070;
+  --bs-gray-60: #9f9f9f;
+  --bs-gray-50: #b8b8b8;
+  --bs-gray-40: #ccc;
+  --bs-gray-30: #e8e8e8;
+  --bs-gray-20: #f0f0f0;
+  --bs-gray-10: #f6f6f6;
+  --bs-gray-05: #fafafa;
+  --bs-white: #fff;
+  --bs-green-10: #edf6f1;
+  --bs-green-20: #dceee3;
+  --bs-green-30: #63ffa1;
+  --bs-green-50: #00d36e;
+  --bs-green-60: #04ac51;
+  --bs-green-80: #09381f;
+  --bs-green-90: #0b2918;
+  --bs-red-10: #fef2f2;
+  --bs-red-20: #fde6e6;
+  --bs-red-30: #ff5e5e;
+  --bs-red-50: #f52626;
+  --bs-red-60: #eb0000;
+  --bs-red-80: #400807;
+  --bs-red-90: #2e0808;
+  --bs-yellow-10: #fffadd;
+  --bs-yellow-20: #ffefb7;
+  --bs-yellow-30: #ffed72;
+  --bs-yellow-50: #ffdf00;
+  --bs-yellow-60: #fc0;
+  --bs-yellow-80: #4f340d;
+  --bs-yellow-90: #2f1a07;
+  --bs-orange-10: #fef7f2;
+  --bs-orange-20: #fce0cc;
+  --bs-orange-30: #ffb47d;
+  --bs-orange-50: #ff8831;
+  --bs-orange-60: #f06500;
+  --bs-orange-80: #802800;
+  --bs-orange-90: #461600;
+  --bs-violet-10: #f5f2ff;
+  --bs-violet-20: #d9ccfe;
+  --bs-violet-30: #946fff;
+  --bs-violet-50: #6f00fa;
+  --bs-violet-60: #4500a4;
+  --bs-violet-80: #29005a;
+  --bs-violet-90: #1a0033;
+  --bs-love-10: #fef4f8;
+  --bs-love-20: #fdd3e2;
+  --bs-love-30: #ffa8c7;
+  --bs-love-50: #ff5492;
+  --bs-love-60: #f6236f;
+  --bs-love-80: #911542;
+  --bs-love-90: #390606;
+  --green-haze: #00a656;
+  --yellow-lemon: #ffdf00;
+  --blue: #007cff;
+  --solid-blue: #005ff8;
+  --light-solid-blue: #eef4fd;
+  --dark-blue: #0068d7;
+  --grey-light: #e9e9e9;
+  --silver: #ccc;
+  --alto-rgb: 216,216,216;
+  --almost-white: #f0f0f0;
+  --light-grey: #e8e8e8;
+  --red: #eb0000;
+  --scarlet-rgb: 254,43,13;
+  --fills-solid-green: #00a87d;
+  --cod-grey: #0a0a0a;
+  --cod-grey-light: #121212;
+  --silver-dark: #b8b8b8;
+}
+
+body {
+  padding: 20px;
+  font: 14px Poppins,Roboto,Helvetica Neue,sans-serif !important;
+color: rgb(15, 15, 15);
+}
+
+a {
+  color: #00B7FF;
+}
+
+video {
+  object-fit: cover;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  opacity:0.8
+}
+
+.content-wrapper {
+  position: relative;
+  height: 100vh;
+}
+
+nav {
+  z-index: 9;
+  background-color: rgb(20, 20, 20);
+  
+}
+nav a {
+  color: rgb(230, 228, 228) !important;
+  letter-spacing:2px
+}
+
+.p-2{
+  padding: 2rem
+}
+.p-3{
+  padding: 3rem
+}
+.p-4{
+  padding: 4rem
+}
+.p-5{
+  padding: 5rem
+}

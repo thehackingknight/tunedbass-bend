@@ -1,0 +1,29 @@
+extends layout
+
+block content
+    h1 Hello
+
+    form
+        input#song(type="file", name="song")
+        button(type="submit") Upload
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous")
+    
+    script.
+        document.querySelector('form').addEventListener('submit',(e)=>{
+           e.preventDefault();
+           console.log('uploading..')
+           var song = document.querySelector('#song').files[0]
+            var fd = new FormData();
+            fd.append('file', song)
+            axios.post('/upload/', fd, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+        }).then(res =>{console.log(res)})
+            .catch(err =>{console.log(err)})
+        }) 
+        
+        
+            
+
+            

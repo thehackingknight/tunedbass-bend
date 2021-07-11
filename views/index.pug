@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+
+  .content 
+    h4 Upload song
+    input#song(required type="file", name="song", accept=".mp3,.wav")
+    button#add() Add
+
+    br
+    button#gsngs Get songs
+
+    div.songs-container
+      if songs
+        each song in songs
+          div.song
+            div 
+              h5= song.title
+            audio(controls src='http://localhost:8000/' + song.url)
+
