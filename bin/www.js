@@ -5,7 +5,7 @@
  */
 
 var {app} = require('../app');
-//var {getIo} = require('../routes/index')
+var {getIo} = require('../routes/index')
 var debug = require('debug')('sketchi-express:server');
 var http = require('http');
 
@@ -26,7 +26,7 @@ const io = require('socket.io')(server, {
   cors: { origin: "*"},
   //path: '/'
 })
-//getIo(io)
+getIo(io)
 /**
  * Listen on provided port, on all network interfaces.
  */

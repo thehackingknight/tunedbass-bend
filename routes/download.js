@@ -71,7 +71,7 @@ router.get('/', async function (req, res){
         formats=formats.filter(format => format.qualityLabel != null)
         var frmt = formats.filter(format => format.itag == itag)[0]
         console.log('frmt: ' + frmt.contentLength);
-        res.header('Content-Disposition', 'attachment; filename="video.mp4')
+        res.header('Content-Disposition', `attachment; filename=${videoDetails.title}.mp4`)
         res.header('Content-Length', frmt.contentLength)
         ytdl(uri, { filter: format => format.itag == itag }).pipe(res)
     }else if (itag001){

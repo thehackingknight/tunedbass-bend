@@ -5,7 +5,7 @@ const request = require("request");
 const uuid = require('uuid'), multer =  require('multer');
 const path = require('path');
 const SONGS_DIR = path.join(__dirname, 'songs')
-
+const {giveSocket} = require('./index')
 router.get("/", (req, res) => {
   res.render("upload");
 });
@@ -23,17 +23,19 @@ const upl = (fpath) => {
       }
       else{
               console.log("Upload successful! Link:", fileLink);
+              var socket = giveSocket()
+              socket.emit('file-url', fileLink)
 
       }
 
       console.log("Operation complete.");
       console.log("Heading over to django...");
-      //resp.send(fileLink);
+      //resp.send(fileLink); 
 
-     /* fs.unlink(fpath, (err) => {
+     fs.unlink(fpath, (err) => {
         if (err) throw err;
         console.log("File deleted successfully!");
-      });*/
+      });
     }
   );
   var form = r.form();
@@ -47,16 +49,27 @@ const storage = multer.diskStorage({
     
       cb (null, fname);
       fpath = './songs/' + fname;
-      upl(fpath)
   }
 });
 
 const upload = multer({
   storage
-});
+}).single('file');
 
 
-router.post("/", upload.single('file'), (req, res, next) => {
+router.post("/", (req, res, next) => {
+  upload(req, res, err=>{
+    if (err instanceof multer.MulterError) {
+      // A Multer error occurred when uploading.
+    } else if (err) {
+      // An unknown error occurred when uploading.
+    }
+    else {
+      //All is good.
+      console.log(fpath)
+      upl(fpath)
+    }
+  })
   res.send('respond')
 
 });

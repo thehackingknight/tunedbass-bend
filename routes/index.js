@@ -8,8 +8,11 @@ router.get('/', function(req, res, next) {
   
 });
 
+let sockt;
 const getIo = (io) =>{
+  console.log('ioio');
   io.on('connection', (socket) => {
+    sockt = socket;
     console.log(socket.id + " Connected")
     socket.on('song', (data) => {
       
@@ -26,9 +29,12 @@ const getIo = (io) =>{
       console.log("update-song");
       socket.broadcast.emit("update-song", song);
     });
+
+
    })
 }
 
+function giveSocket(){return sockt}
 
 
-module.exports = {router, getIo};
+module.exports = {router, getIo, giveSocket};
