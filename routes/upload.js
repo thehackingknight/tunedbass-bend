@@ -58,6 +58,7 @@ const upload = multer({
 
 
 router.post("/", (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*')
   upload(req, res, err=>{
     if (err instanceof multer.MulterError) {
       // A Multer error occurred when uploading.
