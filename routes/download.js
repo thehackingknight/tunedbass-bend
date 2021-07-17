@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
-const axios = require('axios')
+const axios = require('axios').default;
 const fetch = require('node-fetch')
 const ytdl = require('ytdl-core');
 
@@ -46,8 +46,46 @@ var URL = "https://www.youtube.com/watch?v=52ZuuPUwecw&ab_channel=SquashBeatsSqu
        format: 'mp4'
     }).pipe(res)
 })
+var fmts;
+var uri;
 router.get('/', async function (req, res){
-    res.render('download')
+    
+    let {url, itag, itag001} = req.query;
+    if (url){
+        uri = url;
+        let info = await ytdl.getInfo(url)
+    let {formats, videoDetails} = info
+
+    formats=formats.filter(format => format.qualityLabel != null)
+    fmts = formats
+    var {title, lengthSeconds, thumbnails} = videoDetails
+
+    //console.log(formats[0].contentLength)
+    res.json({ formats, thumbnail: thumbnails[0], title, lengthSeconds  })
+    }
+
+    else if (itag){
+        let info = await ytdl.getInfo(uri)
+    let {formats, videoDetails} = info
+
+        formats=formats.filter(format => format.qualityLabel != null)
+        var frmt = formats.filter(format => format.itag == itag)[0]
+        console.log('frmt: ' + frmt.contentLength);
+        res.header('Content-Disposition', 'attachment; filename="video.mp4')
+        res.header('Content-Length', frmt.contentLength)
+        ytdl(uri, { filter: format => format.itag == itag }).pipe(res)
+    }else if (itag001){
+        var frmt = fmts.filter(format => format.itag == itag001)[0]
+        console.log('frmt');
+        res.json({url: frmt.url})
+    }
+    else{
+        res.render('download')
+}
+    
+    
 })
+
+  
 
 module.exports = router

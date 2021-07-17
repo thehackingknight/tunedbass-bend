@@ -1,5 +1,11 @@
 extends layout
 block content
-    h1 Download
-    form(action="/download" method="post")
-        input(type="text", value="dd`")
+    .main
+        h1 Download
+        form#gen-form(action="/download" method="post")
+            .form-group.mt-2
+                input.form-control.w-250(type="url", name="url", placeholder="Video Url")
+            .form-group.mt-2
+                button.btn-sm.btn.btn-success(type="submit") Generate
+
+        .mt-4.par001

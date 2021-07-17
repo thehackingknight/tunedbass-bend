@@ -128,3 +128,37 @@ nav a {
 .p-5{
   padding: 5rem
 }
+.ml-2{
+  margin-left: 2rem
+}
+
+.main {
+  margin: 3rem auto;
+  width: 650px;
+  padding: 10px 25px;
+  border-radius: 6px;
+}
+
+.thumb-cont img{
+
+  border: 1px solid;
+  border-radius: 6px;
+}
+
+.d-flex div{
+  margin: 0 10px
+}
+
+.w-250 {
+  width: 250px
+}
+.w-300 {
+  width: 300px
+}
+.w-350 {
+  width: 350px
+}
+
+.par001{
+  display: none;
+}
