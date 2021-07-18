@@ -8,8 +8,9 @@ const SONGS_DIR = path.join(__dirname, 'songs')
 const {giveSocket} = require('./index')
 const cors = require('cors')
 uploadRouter.get("/", (req, res) => {
+  console.log(req.files);
   res.render("upload");
-});
+}); 
 
 const API_URL = "https://morejust.herokuapp.com/file";
 var sockt;
@@ -17,7 +18,10 @@ const getIoUpload = (io) => {
   io.on('connection', socket =>{
     sockt = socket;
     console.log('upload socket');
-    console.log(socket.id);
+    socket.on('upload', song => { 
+      //fs.writeFile('song.mp3', song, (err)=>{if (err) console(err)})
+      console.log(song.name);
+    })
 
   })
 }
@@ -67,8 +71,7 @@ var corsOpions = {
   origin: 'http://localhost:3000',
   optionsSuccessStatus: 200
 }
-uploadRouter.post("/", cors(corsOpions), (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
+uploadRouter.post("/" , (req, res, next) => {
   upload(req, res, err=>{
     if (err instanceof multer.MulterError) {
       // A Multer error occurred when uploading.

@@ -25,7 +25,7 @@ app.set('port', port);
 var server = http.createServer(app);
 
 const io = require('socket.io')(server, { 
-  cors: { origin: "*"},
+  cors: { origin: "*", methods: ["GET", "POST"]},
   //path: '/'
 })
 getIo(io)
