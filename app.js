@@ -37,6 +37,8 @@ var corsOpions = {
 }
 app.post('/cors', cors(corsOpions), (req, res)=>{
 
+  res.send('Corsos')
+
 })
 app.use('/upload', uploadRouter)
 app.use('/download', downloadRouter)
