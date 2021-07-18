@@ -6,6 +6,8 @@
 
 var {app} = require('../app');
 var {getIo} = require('../routes/index')
+var {getIoUpload} = require('../routes/upload')
+
 var debug = require('debug')('sketchi-express:server');
 var http = require('http');
 
@@ -27,6 +29,7 @@ const io = require('socket.io')(server, {
   //path: '/'
 })
 getIo(io)
+getIoUpload(io)
 /**
  * Listen on provided port, on all network interfaces.
  */

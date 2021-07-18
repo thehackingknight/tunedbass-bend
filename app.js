@@ -8,7 +8,7 @@ var { router} = require('./routes/index');
 var usersRouter = require('./routes/users');
 var songsRouter = require('./routes/songs');
 var songRouter = require('./routes/song');
-var uploadRouter = require('./routes/upload');
+var {uploadRouter} = require('./routes/upload');
 var downloadRouter = require('./routes/download');
 const cors = require('cors');
 

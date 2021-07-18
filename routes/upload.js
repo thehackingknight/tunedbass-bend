@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router();
+const uploadRouter = express.Router();
 const fs = require("fs");
 const request = require("request");
 const uuid = require('uuid'), multer =  require('multer');
@@ -7,13 +7,20 @@ const path = require('path');
 const SONGS_DIR = path.join(__dirname, 'songs')
 const {giveSocket} = require('./index')
 const cors = require('cors')
-router.get("/", (req, res) => {
+uploadRouter.get("/", (req, res) => {
   res.render("upload");
 });
 
 const API_URL = "https://morejust.herokuapp.com/file";
+var sockt;
+const getIoUpload = (io) => {
+  io.on('connection', socket =>{
+    sockt = socket;
+    console.log('upload socket');
+    console.log(socket.id);
 
-console.log("fuk");
+  })
+}
 
 const upl = (fpath) => {
   var r = request.post(
@@ -24,8 +31,7 @@ const upl = (fpath) => {
       }
       else{
               console.log("Upload successful! Link:", fileLink);
-              var socket = giveSocket()
-              socket.emit('file-url', fileLink)
+              sockt.emit('on-url', fileLink)
 
       }
 
@@ -61,7 +67,7 @@ var corsOpions = {
   origin: 'http://localhost:3000',
   optionsSuccessStatus: 200
 }
-router.post("/", cors(corsOpions), (req, res, next) => {
+uploadRouter.post("/", cors(corsOpions), (req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
   upload(req, res, err=>{
     if (err instanceof multer.MulterError) {
@@ -72,11 +78,11 @@ router.post("/", cors(corsOpions), (req, res, next) => {
     else {
       //All is good.
       console.log(fpath)
-      upl(fpath)
+      upl(fpath) 
     }
   })
   res.send('respond')
 
 });
-module.exports = router;
+module.exports = { uploadRouter, getIoUpload }
  
