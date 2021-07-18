@@ -31,6 +31,13 @@ app.get('/express_backend', (req, res) => { //Line 9
   res.send({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT' }); //Line 10
 });
 
+var corsOpions = {
+  origin: 'http://localhost:3000',
+  optionsSuccessStatus: 200
+}
+app.post('/cors', cors(corsOpions), (req, res)=>{
+
+})
 app.use('/upload', uploadRouter)
 app.use('/download', downloadRouter)
 app.use('/', router);
