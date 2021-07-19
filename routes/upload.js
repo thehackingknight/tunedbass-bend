@@ -27,7 +27,7 @@ const getIoUpload = (io) => {
   })
 }
 
-const upl = (fpath) => {
+const upl = (fpath, res) => {
   var r = request.post(
     API_URL,
     function optionalCallback(err, httpResp, fileLink) {
@@ -38,9 +38,7 @@ const upl = (fpath) => {
               console.log("Upload successful! Link:", fileLink);
               sockt.emit('on-url', fileLink)
 
-      }
-
-      console.log("Operation complete.");
+console.log("Operation complete.");
       console.log("Heading over to django...");
       //resp.send(fileLink); 
 
@@ -48,6 +46,11 @@ const upl = (fpath) => {
         if (err) throw err;
         console.log("File deleted successfully!");
       });
+
+      res.send(fileLink);
+      }
+
+      
     }
   );
   var form = r.form();
@@ -84,10 +87,9 @@ uploadRouter.post("/" , (req, res, next) => {
     else {
       //All is good.
       console.log(fpath)
-      upl(fpath) 
+      upl(fpath, res) 
     }
   })
-  res.send('respond')
 
 });
 module.exports = { uploadRouter, getIoUpload }
