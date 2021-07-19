@@ -16,6 +16,7 @@ const API_URL = "https://morejust.herokuapp.com/file";
 var sockt;
 const getIoUpload = (io) => {
   io.on('connection', socket =>{
+    console.log(socket.id);
     sockt = socket;
     console.log('upload socket');
     socket.on('upload', song => { 
@@ -74,8 +75,10 @@ var corsOpions = {
 uploadRouter.post("/" , (req, res, next) => {
   upload(req, res, err=>{
     if (err instanceof multer.MulterError) {
+      res.send('Multer err') 
       // A Multer error occurred when uploading.
     } else if (err) {
+      res.send(err)
       // An unknown error occurred when uploading.
     }
     else {
