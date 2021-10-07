@@ -59,7 +59,7 @@ router.get('/', async function (req, res){
     formats=formats.filter(format => format.qualityLabel != null)
     fmts = formats
     var {title, lengthSeconds, thumbnails} = videoDetails
-
+        console.log(formats);
     //console.log(formats[0].contentLength)
     res.json({ formats, thumbnail: thumbnails[0], title, lengthSeconds  })
     }

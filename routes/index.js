@@ -13,7 +13,6 @@ const getIo = (io) =>{
   console.log('ioio');
   io.on('connection', (socket) => {
     sockt = socket;
-    console.log(socket.id + " Connected")
     socket.on('song', (data) => {
       
       socket.broadcast.emit('song', {url: 'http://localhost:8000/sketchi/songs/' + data, title: data.split('.')[0]})
@@ -30,6 +29,13 @@ const getIo = (io) =>{
       socket.broadcast.emit("update-song", song);
     });
 
+
+    socket.on('comment', data=>{
+      socket.broadcast.emit("comment", data)
+    })
+    socket.on('like', data=>{
+      socket.broadcast.emit("like", data)
+    })
 
    })
 }

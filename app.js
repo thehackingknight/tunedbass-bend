@@ -1,25 +1,31 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-const fileupload = require('express-fileupload')
-var { router} = require('./routes/index');
-var usersRouter = require('./routes/users');
-var songsRouter = require('./routes/songs');
-var songRouter = require('./routes/song');
-var {uploadRouter} = require('./routes/upload');
-var downloadRouter = require('./routes/download');
-const cors = require('cors');
+let createError = require('http-errors');
+let express = require('express');
+let path = require('path');
+let cookieParser = require('cookie-parser');
+let bodyParser = require('body-parser');
+let logger = require('morgan');
+const mongoose = require('mongoose')
+let { router} = require('./routes/index');
+let usersRouter = require('./routes/users');
+let songsRouter = require('./routes/songs');
+let songRouter = require('./routes/song');
+let userRouter = require('./routes/user');
+let authRouter = require('./routes/auth');
+let {uploadRouter} = require('./routes/upload');
+let downloadRouter = require('./routes/download');
+const fileupload = require("express-fileupload");
 
-var app = express();
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", '*');
-  res.header("Access-Control-Allow-Credentials", true);
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
-  next();
-});
+const cors = require('cors');
+const dotenv = require('dotenv');
+
+
+
+dotenv.config()
+
+//Connect DB
+
+let app = express();
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -29,15 +35,15 @@ app.options('*', cors());
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(fileupload());
 app.get('/express_backend', (req, res) => { //Line 9
   res.send({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT' }); //Line 10
 });
 
-var corsOpions = {
+let corsOpions = {
   origin: 'http://localhost:3000',
   optionsSuccessStatus: 200
 }
@@ -46,12 +52,16 @@ app.post('/cors', cors(corsOpions), (req, res)=>{
   res.send('Corsos')
 
 })
+
+
+app.use('/auth', authRouter)
 app.use('/upload', uploadRouter)
 app.use('/download', downloadRouter)
 app.use('/', router);
 app.use('/users', usersRouter);
 app.use('/songs', songsRouter);
 app.use('/song', songRouter);
+app.use('/user', userRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
