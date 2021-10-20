@@ -36,6 +36,9 @@ const getIo = (io) =>{
     socket.on('like', data=>{
       socket.broadcast.emit("like", data)
     })
+    socket.on('notif', data=>{
+      socket.broadcast.emit("notif", data)
+    })
 
    })
 }
