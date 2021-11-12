@@ -16,9 +16,22 @@ router.get('/file', async function(req, res, next) {
   
   const token = req.query.url//'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYzNjc0MDg2MCwianRpIjoiZjJjNjJhOTQtOTM0Zi00NGVlLWIxMGEtOTcyYjc4MmI2NGUzIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJ1cmwiOiJodHRwczovL3Jlcy5jbG91ZGluYXJ5LmNvbS9za2V0Y2hpL3ZpZGVvL3VwbG9hZC92MTYzNjczOTMwMS9UdW5lZEJhc3MvYXVkaW8lMjBmaWxlcy9nZHV3dHl4b2lxY2Z0eDU1cjZzci5tcDMifSwibmJmIjoxNjM2NzQwODYwLCJleHAiOjE2MzY5MTM2NjB9.U-mu4FAGscqwNc1dw_lXE6rIR491GJ7YgjhYvRc2T-k'
   const info = jwt.verify(token, 'CyuJT65KcLcNSOUJVLNCqXztE4XNYkG5')
-  const {url} = info.sub  
+  const {url} = info.sub 
+  const file = fs.createWriteStream('songs/aud.mp3') 
   http.get(url.replace('https', 'http'), r=>{
-    r.pipe(res)
+    
+      const cont = fs.readFileSync('songs/aud.mp3')
+      let t = ''
+      r.on('data', data=>{
+       res.write(data)
+      
+      }).on('end',()=>{
+        res.end()
+      })
+      
+      
+    
+    
   })
 
 
