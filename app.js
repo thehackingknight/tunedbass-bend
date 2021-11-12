@@ -4,7 +4,6 @@ let path = require('path');
 let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 let logger = require('morgan');
-const mongoose = require('mongoose')
 let { router} = require('./routes/index');
 let usersRouter = require('./routes/users');
 let songsRouter = require('./routes/songs');
@@ -38,7 +37,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(fileupload());
+//app.use(fileupload());
 app.get('/express_backend', (req, res) => { //Line 9
   res.send({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT' }); //Line 10
 });

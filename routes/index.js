@@ -10,9 +10,10 @@ router.get('/', function(req, res, next) {
 
 let sockt;
 const getIo = (io) =>{
-  console.log('ioio');
+  //console.log('ioio');
   io.on('connection', (socket) => {
     sockt = socket;
+    //console.log(socket.id)
     socket.on('song', (data) => {
       
       socket.broadcast.emit('song', {url: 'http://localhost:8000/sketchi/songs/' + data, title: data.split('.')[0]})

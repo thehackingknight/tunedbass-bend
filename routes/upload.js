@@ -1,6 +1,8 @@
 const express = require("express");
 const uploadRouter = express.Router();
 const fs = require("fs");
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+
 const request = require("request");
 const uuid = require("uuid"),
   multer = require("multer");
@@ -60,11 +62,21 @@ const storage = multer.diskStorage({
   filename: async (req, file, cb) => {
     let fname  = uuid.v4().toString() + "_" + file.originalname
       cb (null, fname);
-      fpath = './songs/' + fname;
+      filePath = './songs/' + fname;
   }
 });
-
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'songs',
+    format: async (req, file) => 'mp3', // supports promises as well
+    public_id: (req, file) => 'computed-filename-using-request',
+  },
+});
 */
+
+
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (!file) return cb(new Error("File not provided"), null);
@@ -77,32 +89,42 @@ const storage = multer.diskStorage({
     return cb(null, filename);
   },
 });
-const upload = multer({
-  storage,
-});
+const parser = multer({ storage });
+const upload = multer();
 
 let corsOpions = {
   origin: "http://localhost:3000",
   optionsSuccessStatus: 200,
 };
 
-uploadRouter.post("/", upload.single("file"), async (req, res, next) => {
+uploadRouter.post("/", parser.single("file"), async (req, res, next) => {
 
-  const url = process.env.HOST_URL + '/song/' + filePath
-  res.status(200).json({url})
-  /*
-  if (filePath){
-    const result = await cloudinary.uploader.upload(filePath,{
-      resource_type: 'raw'
-    }, (err, cres)=>{
-      if (err) return res.status(500).json({ message: "Some went wrong"})
-      console.log(cres)
-    })
-    res.status(200).json(result)
-  }
-  else{
-    res.send("Multer failed");
-  }*/
-  //res.send("DONE");
+//const file = req.files.file
+  //let fname  = uuid.v4().toString() + "_" + file.name
+  
+  let fpath ='songs/' + req.file.filename
+  //fs.writeFileSync(fpath, Buffer.from(new Uint8Array(req.file.buffer)) );
+
+  cloudinary.
+  uploader.upload(
+    req.file.path,
+     {resource_type: "video", folder: `TunedBass/audio files/`, overwrite: true}, (err, result)=>{
+       if (err) {
+         console.log(err)
+         res.status(500).json({msg: 'something went wrong'})
+         return
+        };
+
+        fs.unlink(req.file.path, delErr=>{
+          if (delErr) return res.status(500).send(delErr);
+          console.log('Temp file deleted successfully')
+          res.json({url: result.secure_url})
+
+        })
+        
+     }
+      )
+    
+      //res.send('ok')
 });
 module.exports = { uploadRouter, getIoUpload };
