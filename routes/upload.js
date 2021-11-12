@@ -104,7 +104,7 @@ uploadRouter.post("/", parser.single("file"), async (req, res, next) => {
   
   let fpath ='songs/' + req.file.filename
   //fs.writeFileSync(fpath, Buffer.from(new Uint8Array(req.file.buffer)) );
-
+console.log(req.file)
   cloudinary.
   uploader.upload(
     req.file.path,
