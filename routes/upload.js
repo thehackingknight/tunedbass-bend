@@ -1,13 +1,11 @@
 const express = require("express");
 const uploadRouter = express.Router();
 const fs = require("fs");
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
 const request = require("request");
 const uuid = require("uuid"),
   multer = require("multer");
 const path = require("path");
-const SONGS_DIR = path.join(__dirname, "songs");
 const { extname, resolve } = require("path");
 const cloudinary = require("../utils/cloudinary");
 
@@ -76,7 +74,15 @@ const storage = new CloudinaryStorage({
 */
 
 
-
+function tbuuid(){
+  var dt = new Date().getTime();
+  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = (dt + Math.random()*16)%16 | 0;
+      dt = Math.floor(dt/16);
+      return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+  });
+  return uuid;
+}
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (!file) return cb(new Error("File not provided"), null);
@@ -84,7 +90,7 @@ const storage = multer.diskStorage({
   },
 
   filename: (req, file, cb) => {
-    let filename = Date.now() + extname(file.originalname);
+    let filename = Date.now() + tbuuid() + extname(file.originalname);
     filePath = filename;
     return cb(null, filename);
   },
@@ -92,20 +98,14 @@ const storage = multer.diskStorage({
 const parser = multer({ storage });
 const upload = multer();
 
-let corsOpions = {
-  origin: "http://localhost:3000",
-  optionsSuccessStatus: 200,
-};
-
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 uploadRouter.post("/", parser.single("file"), async (req, res, next) => {
 
-//const file = req.files.file
-  //let fname  = uuid.v4().toString() + "_" + file.name
-  
-  let fpath ='songs/' + req.file.filename
-  //fs.writeFileSync(fpath, Buffer.from(new Uint8Array(req.file.buffer)) );
-console.log(req.file)
-  cloudinary.
+cloudinary.
   uploader.upload(
     req.file.path,
      {resource_type: "video", folder: `TunedBass/audio files/`, overwrite: true}, (err, result)=>{
@@ -118,7 +118,7 @@ console.log(req.file)
         fs.unlink(req.file.path, delErr=>{
           if (delErr) return res.status(500).send(delErr);
           console.log('Temp file deleted successfully')
-          res.json({url: result.secure_url})
+          res.json({url: result.secure_url, cloudinary_id: result.public_id})
 
         })
         

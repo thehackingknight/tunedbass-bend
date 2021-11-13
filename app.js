@@ -8,6 +8,7 @@ let { router} = require('./routes/index');
 let usersRouter = require('./routes/users');
 let songsRouter = require('./routes/songs');
 let songRouter = require('./routes/song');
+let fileRouter = require('./routes/file');
 let userRouter = require('./routes/user');
 let authRouter = require('./routes/auth');
 let {uploadRouter} = require('./routes/upload');
@@ -61,6 +62,7 @@ app.use('/users', usersRouter);
 app.use('/songs', songsRouter);
 app.use('/song', songRouter);
 app.use('/user', userRouter);
+app.use('/file', fileRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
