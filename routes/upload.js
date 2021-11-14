@@ -103,12 +103,27 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
+
 uploadRouter.post("/", parser.single("file"), async (req, res, next) => {
 
+  const {rt, cd_id} = req.query;
+  
+  let rtype = '', folder = 'TunedBass/';
+  if (rt && rt === 'img'){
+    rtype = 'image',
+    folder += 'images'
+  }
+  else{
+rtype = 'video',
+folder += 'audio files'
+  }
+
+  console.log(cd_id);
 cloudinary.
   uploader.upload(
     req.file.path,
-     {resource_type: "video", folder: `TunedBass/audio files/`, overwrite: true}, (err, result)=>{
+     {resource_type: rtype, folder: folder, overwrite: true, public_id: cd_id !== 'undefined' ? cd_id : ''}, (err, result)=>{
        if (err) {
          console.log(err)
          res.status(500).json({msg: 'something went wrong'})
