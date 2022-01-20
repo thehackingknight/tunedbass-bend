@@ -121,7 +121,7 @@ folder += 'audio files'
 cloudinary.
   uploader.upload_large(
     req.file.path,
-     {resource_type: rtype, folder: folder, overwrite: true, public_id: cd_id !== 'undefined' ? cd_id : '', chunk_size: '1'}, (err, result)=>{
+     {resource_type: rtype, folder: folder, overwrite: true, public_id: cd_id !== 'undefined' ? cd_id : '', chunk_size: '6000000'}, (err, result)=>{
        if (err) {
          console.log(err)
          res.status(500).json({msg: 'something went wrong'})
