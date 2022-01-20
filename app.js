@@ -34,10 +34,13 @@ app.use(cors())
 app.options('*', cors());
 
 app.use(logger('dev'));
+app.use(bodyParser.raw({type: 'application/octet-stream', limit: '100mb'}))
+
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'uploads')));
 //app.use(fileupload());
 app.get('/express_backend', (req, res) => { //Line 9
   res.send({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT' }); //Line 10

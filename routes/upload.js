@@ -96,7 +96,6 @@ const storage = multer.diskStorage({
   },
 });
 const parser = multer({ storage });
-const upload = multer();
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -119,7 +118,6 @@ rtype = 'video',
 folder += 'audio files'
   }
 
-  console.log(cd_id);
 cloudinary.
   uploader.upload(
     req.file.path,
