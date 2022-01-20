@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const fs = require('fs');
 const md5 = require('md5');
+const cloudinary = require('../utils/cloudinary')
 function tbuuid(){
   var dt = new Date().getTime();
   var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -31,8 +32,13 @@ router.post('/chunkupload', (req, res, next) => {
   
   if (lastChunk) {
     const fName = md5(name + req.ip) + '.' + ext;
+    const fPath = './uploads/' + fName;
    // console.log(tempName)
     fs.renameSync('./uploads/' + tempName, './uploads/' + fName);
+
+    // Upload chunk to cloudinary
+
+   
     res.status(200).json({fName})
   }
   else{
@@ -89,4 +95,19 @@ const getIo = (io) =>{
 function giveSocket(){return sockt}
 
 
+router.post('/uploadchunked', (req, res, next) =>{
+
+
+  const fname = md5('purity.mp3')
+  const fpath = `./uploads/purity.mp3`;
+  cloudinary.uploader.upload_chunked(fpath, {resource_type: 'video', folder: 'audio files', overwrite: true, public_id: fname}, (err, resp) =>{
+    if (err){
+      console.log(err)
+      res.status(500).send('Something went wrong')
+    }
+    console.log(resp)
+    res.send('ok')
+  })
+  
+})
 module.exports = {router, getIo, giveSocket};
