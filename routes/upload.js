@@ -117,7 +117,7 @@ uploadRouter.post("/", parser.single("file"), async (req, res, next) => {
 rtype = 'video',
 folder += 'audio files'
   }
-
+console.log('uploading to cloudinary...')
 cloudinary.
   uploader.upload_large(
     req.file.path,
