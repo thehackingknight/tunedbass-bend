@@ -1,7 +1,6 @@
 const express = require("express");
 const uploadRouter = express.Router();
 const fs = require("fs");
-const streamifier = require("streamifier");
 
 const request = require("request");
 const uuid = require("uuid"),
@@ -9,7 +8,6 @@ const uuid = require("uuid"),
 const path = require("path");
 const { extname, resolve } = require("path");
 const cloudinary = require("../utils/cloudinary");
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 uploadRouter.get("/", (req, res) => {
   console.log(req.files);
@@ -75,16 +73,14 @@ const storage = new CloudinaryStorage({
 });
 */
 
-function tbuuid() {
+
+function tbuuid(){
   var dt = new Date().getTime();
-  var uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
-    /[xy]/g,
-    function (c) {
-      var r = (dt + Math.random() * 16) % 16 | 0;
-      dt = Math.floor(dt / 16);
-      return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
-    }
-  );
+  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = (dt + Math.random()*16)%16 | 0;
+      dt = Math.floor(dt/16);
+      return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+  });
   return uuid;
 }
 const storage = multer.diskStorage({
@@ -99,80 +95,49 @@ const storage = multer.diskStorage({
     return cb(null, filename);
   },
 });
-const memoryStorage = multer.memoryStorage();
+const parser = multer({ storage });
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const cStorage = new CloudinaryStorage({
-  cloudinary,
-  params: {
-    folder: "TunedBass",
-  },
-});
-const parser = multer({ storage: memoryStorage });
-
-
 
 uploadRouter.post("/", parser.single("file"), async (req, res, next) => {
-  let cld_upload_stream = cloudinary.uploader.upload_stream(
-    {
-      folder: "TunedBass/audio files",
-      format:'mp3',
-      resource_type: 'video'
-    },
-    function (error, result) {
-       if(error){
-         console.log(error);
-         return
-       };
-      
-       res.json({ url: result.secure_url, cloudinary_id: result.public_id });
-    }
-  );
-  streamifier.createReadStream(req.file.buffer).pipe(cld_upload_stream)
+
+  const {rt, cd_id} = req.query;
   
-  return;
-  const { rt, cd_id } = req.query;
-
-  let rtype = "",
-    folder = "TunedBass/";
-  if (rt && rt === "img") {
-    (rtype = "image"), (folder += "images");
-  } else {
-    (rtype = "video"), (folder += "audio files");
+  let rtype = '', folder = 'TunedBass/';
+  if (rt && rt === 'img'){
+    rtype = 'image',
+    folder += 'images'
   }
-  console.log("uploading to cloudinary...");
+  else{
+rtype = 'video',
+folder += 'audio files'
+  }
+console.log('uploading to cloudinary...')
+cloudinary.
+  uploader.upload_large(
+    req.file.path,
+     {resource_type: rtype, folder: folder, overwrite: true, public_id: cd_id !== 'undefined' ? cd_id : '', chunk_size: '6000000'}, (err, result)=>{
+       if (err) {
+         console.log(err)
+         res.status(500).json({msg: 'something went wrong'})
+         return
+        };
 
-  console.log(req.file.buffer);
-  res.send("ok");
-  return;
-  cloudinary.uploader.upload_large(
-    req.file.buffer,
-    {
-      resource_type: rtype,
-      folder: folder,
-      overwrite: true,
-      public_id: cd_id !== "undefined" ? cd_id : "",
-      chunk_size: "6000000",
-    },
-    (err, result) => {
-      if (err) {
-        console.log(err);
-        res.status(500).json({ msg: "something went wrong" });
-        return;
-      }
+        fs.unlink(req.file.path, delErr=>{
+          if (delErr) return res.status(500).send(delErr);
+          console.log('Temp file deleted successfully')
+          res.json({url: result.secure_url, cloudinary_id: result.public_id})
 
-      fs.unlink(req.file.path, (delErr) => {
-        if (delErr) return res.status(500).send(delErr);
-        console.log("Temp file deleted successfully");
-        res.json({ url: result.secure_url, cloudinary_id: result.public_id });
-      });
-    }
-  );
-
-  //res.send('ok')
+        })
+        
+     }
+      )
+    
+      //res.send('ok')
 });
 module.exports = { uploadRouter, getIoUpload };
